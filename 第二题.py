@@ -1,8 +1,9 @@
 import requests
 
-url = 'https://www.mashangpa.com/api/problem-detail/1/data/?page={}'
+url = 'https://www.mashangpa.com/api/problem-detail/2/data/?page={}'
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
+    'referer': 'https://www.mashangpa.com/problem-detail/1/',
 }
 
 cookies = {
@@ -15,15 +16,21 @@ cookies = {
 
 def get_single(page_num):
     response = requests.get(url=url.format(page_num), headers=headers, cookies=cookies)
+    data = response.json()
+    print(data)
     count = 0
     for i in range(0, 10):
-        count += response.json()["current_array"][i]
+        count += data["current_array"][i]
+    print(f'第{page_num}页总和：' + f'{count}')
     return count
 
 
-if __name__ == '__main__':
-    # print(get_single(1))
+def main():
     sum_m = 0
     for i in range(1, 21):
         sum_m += get_single(i)
     print(sum_m)
+
+
+if __name__ == '__main__':
+    main()
